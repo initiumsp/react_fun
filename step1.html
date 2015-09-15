@@ -24,15 +24,34 @@
 
     <script type="text/babel">
 
+      var quizData = [
+        {
+          question: 'Who is the brother of Sherlock Holmes?',
+          options: ['Mycraft', 'Mycroft', 'Minecraft']
+        }
+      ];
+
       var Quiz = React.createClass({
+
         render: function() {
+
+          var firstQA = this.props.quizData[0];
+
           return (
-            <h1>{this.props.text}</h1>
+            <div>
+              <h1>{firstQA.question}</h1>
+              <ul>
+                <li>{firstQA.options[0]}</li>
+                <li>{firstQA.options[1]}</li>
+                <li>{firstQA.options[2]}</li>
+              </ul>
+            </div>
           );
         }
       });
 
-      ReactDOM.render(<Quiz text="Hello world" />, document.getElementById('content'));
+
+      ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'))
     </script>
 
   </body>

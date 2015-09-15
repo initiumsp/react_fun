@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8' />
+    <title>Quiz!</title>
+
+    <!-- The React Core package. -->
+    <script src="https://fb.me/react-0.13.0.js"></script>
+
+    <!-- Babel, which enables us to write in-file JSX and ES6 -->
+    <script src="https://fb.me/JSXTransformer-0.13.0.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Injection node for React. Everything in it will be replaced by React elements we shall create. -->
+  	<div id='content'>I'll be replaced soon :(</div>
+
+    <script type="text/jsx">
+
+      var quizData = [
+        {
+          question: 'Who is the brother of Sherlock Holmes?',
+          options: ['Mycraft', 'Mycroft', 'Minecraft']
+        }
+      ];
+
+      var optionList = React.createClass({
+        render: function() {
+          return (
+            <ul>
+              <li> {this.props.options[0]} </li>
+            </ul>
+          );
+        }
+      });
+
+      var Quiz = React.createClass({
+
+        render: function() {
+
+          var firstQA = this.props.quizData[0];
+
+          return (
+            <div>
+              <h1>{firstQA.question}</h1>
+              <optionList options={firstQA.options} />
+              <ul>
+                <li> {this.props.options[0]} </li>
+              </ul>
+
+            </div>
+          );
+        }
+      });
+
+
+      React.render(<Quiz quizData={quizData} />, document.getElementById('content'))
+    </script>
+
+  </body>
+
+</html>
