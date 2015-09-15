@@ -27,7 +27,7 @@
       var quizData = [
         {
           question: 'Who is the brother of Sherlock Holmes?',
-          options: ['Mycraft', 'Mycroft', 'Minecraft']
+          options: ['Mycraft', 'Mycroft', 'Minecraft', 'Mycrof']
         }
       ];
 
@@ -38,9 +38,9 @@
 
       var OptionList = ({options}) =>
       <ul>
-        <li>{options[0]}</li>
-        <li>{options[1]}</li>
-        <li>{options[2]}</li>
+        {options.map((option) => 
+          <li key={option}>{option}</li>
+        )}
       </ul>
 
       var Quiz = React.createClass({
@@ -57,7 +57,6 @@
           );
         }
       });
-
 
       ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'))
     </script>
