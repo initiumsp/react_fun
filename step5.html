@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+
+<html lang='en'>
+
+  <head>
+    <meta charset='utf-8' />
+    <title>Quiz!</title>
+
+    <!-- The React Core package. -->
+    <script src="https://fb.me/react-0.14.0-rc1.js"></script>
+
+    <!-- The React DOM package, which enables generating web pages-->
+    <script src="https://fb.me/react-dom-0.14.0-rc1.js"></script>
+
+    <!-- Babel, which enables us to write in-file JSX and ES6 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.js"></script>
+
+  </head>
+
+  <body>
+
+    <!-- Injection node for React. Everything in it will be replaced by React elements we shall create. -->
+  	<div id='content'>If you saw me, something went wrong...You can check the console for error messages. :)</div>
+
+    <script type="text/babel">
+
+      var quizData = [
+        {
+          question: 'Who is the brother of Sherlock Holmes?',
+          options: ['Mycraft', 'Mycroft', 'Minecraft', 'Mycrof'],
+          correctAnswer: 'Mycroft'
+        },
+        {
+          question: 'What is your favourite game?',
+          options: ['StarCraft', 'Minecraft', 'WarCraft'],
+          correctAnswer: 'StarCraft'
+        }
+      ];
+
+      var QuestionText = ({text}) =>
+      <h1>
+        {text}
+      </h1>
+
+      var OptionList = ({options, handleOptionClick}) =>
+      <ul>
+        {options.map((option) => 
+          <li key={option} onClick={handleOptionClick}>{option}</li>
+        )}
+      </ul>
+
+      var QACard = React.createClass({
+        render: function() {
+
+          var qa = this.props.qa;
+          var handleOptionClick = this.props.handleOptionClick;
+
+          return (
+            <div>
+              <QuestionText text={qa.question} />
+              <OptionList options={qa.options}
+                          handleOptionClick={handleOptionClick}/>
+            </div>            
+          );
+        }
+      });
+
+      var ResultPage = ({score}) =>
+      <h1> Your answer {score} questions correctly </h1>
+
+      var Quiz = React.createClass({
+
+        getInitialState: () => ({
+          questionSerial: 0
+        }),
+
+        showNextQuestion: function() {
+          this.setState({
+            questionSerial: this.state.questionSerial + 1
+          });
+        },
+
+        render: function() {
+
+          var qa = this.props.quizData[this.state.questionSerial];
+          var page;
+         
+          if (this.state.questionSerial + 1 <= this.props.quizData.length) { page = <QACard qa={qa}
+                         handleOptionClick={this.showNextQuestion} /> }
+             else {
+              page = <ResultPage score={this.state.totalScore} />
+             }
+
+          return page;
+        }
+      });
+
+      ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'));
+    </script>
+
+  </body>
+
+</html>
