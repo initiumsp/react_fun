@@ -24,15 +24,89 @@
 
     <script type="text/babel">
 
+      var quizData = [
+        {
+          question: 'Who is the brother of Sherlock Holmes?',
+          options: ['Microft', 'Mycroft', 'Mycraft', 'Minecraft', 'Microsoft'],
+          correctOption: 'Mycroft'
+        },
+        {
+          question: 'Which of the following is RPG?',
+          options: ['StarCraft', 'Mass Effect', 'Super Mario'],
+          correctOption: 'Mass Effect'
+        },
+        {
+          question: 'What does Mario do for a living?',
+          options: ['Carpenter', 'Journalist', 'Developer', 'Plumber'],
+          correctOption: 'Developer'
+        }
+      ];
+
+      var QuestionText = ({question}) =>
+        <h1>{question}</h1>
+
+      var OptionList = ({options, handleOptionClick}) =>
+        <ul>
+          {options.map(
+            (option) => <li key={option} onClick={handleOptionClick}> {option} </li>
+          )}
+        </ul>
+
+      var Result = ({score}) => <h1>Your score is: {score}</h1>;
+
+      var QACard = ({currentQA, handleOptionClick}) =>
+        <div>
+          <QuestionText question={currentQA.question} />
+          <OptionList options={currentQA.options}
+                      handleOptionClick={handleOptionClick(currentQA.correctOption)} />
+        </div>
+
       var Quiz = React.createClass({
+
+        getInitialState: function(){
+          return {
+            currentQASerial: 0,
+            totalScore: 0
+          };
+        },
+
+        handleOptionClick: function(correctOption) {
+
+          return function(event) {
+
+            var chosenOption = event.target.textContent;
+            var score;
+
+            if (chosenOption === correctOption) {
+              score = 1;
+            } else {
+              score = 0;
+            }
+
+            this.setState({
+              currentQASerial: this.state.currentQASerial + 1,
+              totalScore: this.state.totalScore + score
+            });
+
+          }.bind(this);
+        },
+
         render: function() {
-          return (
-            <h1>{this.props.text}</h1>
-          );
+
+          var quizData = this.props.quizData;
+          var currentQASerial = this.state.currentQASerial;
+          var currentQA = quizData[currentQASerial];
+
+          if (currentQASerial === quizData.length) {
+            return <Result score={this.state.totalScore} />
+          } else {
+            return <QACard currentQA={currentQA} handleOptionClick={this.handleOptionClick} />;            
+          }
+
         }
       });
 
-      ReactDOM.render(<Quiz text="Hello world" />, document.getElementById('content'));
+      ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'));
     </script>
 
   </body>

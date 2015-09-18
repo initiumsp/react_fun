@@ -27,67 +27,63 @@
       var quizData = [
         {
           question: 'Who is the brother of Sherlock Holmes?',
-          options: ['Mycraft', 'Mycroft', 'Minecraft', 'Mycrof'],
+          options: ['Microft', 'Mycroft', 'Mycraft', 'Minecraft', 'Microsoft'],
         },
         {
-          question: 'Which is a RPG game?',
-          options: ['Minecraft', 'Mass Effect', 'Super Mario Bros.'],
+          question: 'Which of the following is RPG?',
+          options: ['StarCraft', 'Mass Effect', 'Super Mario']
+        },
+        {
+          question: 'What does Mario do for a living?',
+          options: ['Carpenter', 'Journalist', 'Developer', 'Plumber']
         }
       ];
 
-      var QuestionText = ({text}) =>
-      <h1>
-        {text}
-      </h1>
+      var QuestionText = ({question}) =>
+        <h1>{question}</h1>
 
-      var OptionList = ({options, clickHandler}) =>
-      <ul>
-        {options.map((option) => 
-          <li key={option} onClick={clickHandler}>
-            {option}
-          </li>
-        )}
-      </ul>
+      var OptionList = ({options, handleOptionClick}) =>
+        <ul>
+          {options.map(
+            (option) => <li key={option} onClick={handleOptionClick}> {option} </li>
+          )}
+        </ul>
 
-      var Result = ({totalScore}) =>
-      <h1> Your score is: {totalScore} </h1>
+      var Result = () => <h1>The end</h1>;
 
-      var QACard = ({qa, clickHandler}) =>
-      <div>
-        <QuestionText text={qa.question} />
-        <OptionList options={qa.options}
-                    clickHandler={clickHandler} />
-      </div>
-
+      var QACard = ({currentQA, handleOptionClick}) =>
+        <div>
+          <QuestionText question={currentQA.question} />
+          <OptionList options={currentQA.options} handleOptionClick={handleOptionClick} />
+        </div>
 
       var Quiz = React.createClass({
 
-        getInitialState: function() {
+        getInitialState: function(){
           return {
-            questionSerial: 0,
-            totalScore: 0
-          }
+            currentQASerial: 0
+          };
         },
 
         handleOptionClick: function() {
-
-            this.setState({
-              questionSerial: this.state.questionSerial + 1,
-            });            
-
+          this.setState({
+            currentQASerial: this.state.currentQASerial + 1
+          });
         },
 
         render: function() {
 
-          var qa = this.props.quizData[this.state.questionSerial];
+          var quizData = this.props.quizData;
+          var currentQASerial = this.state.currentQASerial;
+          var currentQA = quizData[currentQASerial];
 
-          if (this.state.questionSerial + 1 > this.props.quizData.length) {
-            return <Result totalScore={this.state.totalScore} />
+          if (currentQASerial + 1 === quizData.length) {
+            return <Result />
           } else {
-            return <QACard qa={qa} clickHandler={this.handleOptionClick}/>;
+            return <QACard currentQA={currentQA} handleOptionClick={this.handleOptionClick} />;            
           }
-        }
 
+        }
       });
 
       ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'));
