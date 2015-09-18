@@ -28,12 +28,12 @@
         {
           question: 'Who is the brother of Sherlock Holmes?',
           options: ['Mycraft', 'Mycroft', 'Minecraft', 'Mycrof'],
-          correctAnswer: 'Mycroft'
+          correctOption: 'Mycroft'
         },
         {
-          question: 'What is your favourite game?',
-          options: ['StarCraft', 'Minecraft', 'WarCraft'],
-          correctAnswer: 'StarCraft'
+          question: 'Which game was made by Blizzard?',
+          options: ['StarCraft', 'Minecraft', 'Mass Effect'],
+          correctOption: 'StarCraft'
         }
       ];
 
@@ -42,10 +42,10 @@
         {text}
       </h1>
 
-      var OptionList = ({options, handleOptionClick}) =>
+      var OptionList = ({options, handleOptionClick, correctOption}) =>
       <ul>
         {options.map((option) => 
-          <li key={option} onClick={handleOptionClick}>{option}</li>
+          <li key={option} onClick={handleOptionClick(correctOption)}>{option}</li>
         )}
       </ul>
 
@@ -59,7 +59,8 @@
             <div>
               <QuestionText text={qa.question} />
               <OptionList options={qa.options}
-                          handleOptionClick={handleOptionClick}/>
+                          handleOptionClick={handleOptionClick}
+                          correctOption={qa.correctOption}/>
             </div>            
           );
         }
@@ -71,13 +72,29 @@
       var Quiz = React.createClass({
 
         getInitialState: () => ({
-          questionSerial: 0
+          questionSerial: 0,
+          totalScore: 0
         }),
 
-        showNextQuestion: function() {
-          this.setState({
-            questionSerial: this.state.questionSerial + 1
-          });
+        getOptionClickHandler: function(correctOption) {
+
+          return function(event) {
+            var selectedOption = event.target.textContent;
+            var score;
+            console.log('selected=' + selectedOption);
+            console.log('correct=' + correctOption);
+
+            if (correctOption === selectedOption) {
+              score = 1;
+            } else {
+              score = 0;
+            }
+
+            this.setState({
+              questionSerial: this.state.questionSerial + 1,
+              totalScore: this.state.totalScore + score
+            });
+          }.bind(this);
         },
 
         render: function() {
@@ -85,11 +102,12 @@
           var qa = this.props.quizData[this.state.questionSerial];
           var page;
          
-          if (this.state.questionSerial + 1 <= this.props.quizData.length) { page = <QACard qa={qa}
-                         handleOptionClick={this.showNextQuestion} /> }
-             else {
+          if (this.state.questionSerial + 1 <= this.props.quizData.length) {
+              page = <QACard qa={qa}
+                             handleOptionClick={this.getOptionClickHandler} />
+            } else {
               page = <ResultPage score={this.state.totalScore} />
-             }
+            }
 
           return page;
         }
