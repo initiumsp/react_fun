@@ -32,16 +32,16 @@
       ];
 
       var QuestionText = ({text}) =>
-      <h1>
-        {text}
-      </h1>
+        <h1>
+          {text}
+        </h1>
 
       var OptionList = ({options}) =>
-      <ul>
-        {options.map((option) => 
-          <li key={option}>{option}</li>
-        )}
-      </ul>
+        <ul>
+          {options.map((option) => 
+            <li key={option}>{option}</li>
+          )}
+        </ul>
 
       var Quiz = React.createClass({
 
