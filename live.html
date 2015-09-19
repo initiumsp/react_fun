@@ -24,15 +24,82 @@
 
     <script type="text/babel">
 
+      var quizData = [
+        {
+          question: 'Who is the brother of Sherlock Holmes?',
+          options: ['Microft', 'Mycroft', 'Macroft', 'Minecraft'],
+          correctOption: 'Mycroft'
+        },
+        {
+          question: 'Which one is a RPG?',
+          options: ['Minecraft', 'Mass Effect', 'StarCraft'],
+          correctOption: 'Mass Effect'
+        },
+        {
+          question: 'What does Super Mario do for a living?',
+          options: ['Carpenter', 'Web Developer', 'Joker', 'Plumber'],
+          correctOption: 'Web Developer'
+        }
+      ];
+
+      var QuestionText = ({question}) =>
+        <h1>{question}</h1>
+
+      var OptionList = ({options, handleOptionClick, correctOption}) =>
+        <ul>
+          {options.map(
+            (option) => <li key={option} onClick={handleOptionClick(correctOption)} >{option}
+            </li>
+          )}
+        </ul>
+
+      var Result = ({score}) => <h1> You get {score} scores </h1>
+
       var Quiz = React.createClass({
+
+        getInitialState: function() {
+          return {
+            currentQASerial: 0,
+            totalScore: 0
+          }
+        },
+
+        handleOptionClick: function(correctOption) {
+          return function(event) {
+            var chosenOption = event.target.textContent;
+            var score;
+            if (chosenOption === correctOption) {
+              score = 1;
+            } else {
+              score = 0;
+            }
+            this.setState({
+              currentQASerial: this.state.currentQASerial + 1,
+              totalScore: this.state.totalScore + score
+            });
+          }.bind(this);
+        },
+
         render: function() {
-          return (
-            <h1>{this.props.text}</h1>
+          var currentNo = this.state.currentQASerial;
+          var qa = this.props.quizData[currentNo];
+
+          if (currentNo === this.props.quizData.length) {
+            return <Result score={this.state.totalScore} />
+          } else {
+            return (
+              <div>
+                <QuestionText question={qa.question} />
+                <OptionList options={qa.options}
+                  handleOptionClick={this.handleOptionClick}
+                  correctOption={qa.correctOption} />
+              </div>
           );
+          }
         }
       });
 
-      ReactDOM.render(<Quiz text="Hello world" />, document.getElementById('content'));
+      ReactDOM.render(<Quiz quizData={quizData} />, document.getElementById('content'));
     </script>
 
   </body>
